@@ -1,0 +1,16 @@
+[package]
+name = "neuralnav-evals"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+neuralnav-core = { workspace = true }
+neuralnav-planner = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+tokio = { workspace = true }
+
+[[bin]]
+name = "run-evals"
+path = "src/bin/run_evals.rs"

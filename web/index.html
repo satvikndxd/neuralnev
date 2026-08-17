@@ -4,14 +4,13 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>NeuralNav — Voice-First Autonomous Browser Agent</title>
-<meta name="description" content="NeuralNav converts spoken commands into structured task graphs, executes them via MCP browser tools, verifies every step, and speaks concise feedback." />
+<meta name="description" content="NeuralNav converts spoken commands into structured task graphs, executes them via a BrowserRuntime, verifies every step, and speaks concise feedback." />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
-<link rel="stylesheet" href="styles.css" />
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23f2ede1'/%3E%3Ccircle cx='11' cy='16' r='8' fill='%23d8362a'/%3E%3Cpath d='M16 24 L28 24 L22 12 Z' fill='%231f4fd8'/%3E%3C/svg%3E" />
 </head>
-<body data-palette="#79aeee,#5093e6,#2a78d6,#1e5dae,#154a85,#0c355e">
+<body>
 
 <!-- ══════════════════ TOP BAR ══════════════════ -->
 <header class="topbar">
@@ -27,7 +26,7 @@
     <a href="#metrics">Metrics</a>
     <a href="#safety">Safety</a>
   </nav>
-  <span class="top-badge">EST. 2025 · AGENTIC</span>
+  <span class="top-badge" id="mode-badge">MOCK MODE</span>
 </header>
 
 <!-- ══════════════════ HERO ══════════════════ -->
@@ -40,9 +39,9 @@
       <span class="ht-line indent-2">VERIFY<span class="accent-blue">.</span></span>
     </h1>
     <p class="hero-sub">
-      NeuralNav listens through a noise-adaptive ASR pipeline, decomposes intent into
-      <strong>structured task graphs</strong>, executes via <strong>MCP browser tools</strong>,
-      verifies every step against DOM &amp; accessibility state — and speaks back, concisely.
+      NeuralNav listens, decomposes intent into <strong>structured task graphs</strong>,
+      executes through a trait-based <strong>BrowserRuntime</strong> (mock or Playwright sidecar),
+      verifies every step against page state — and speaks back, concisely.
     </p>
     <div class="hero-actions">
       <button class="btn btn-primary" id="hero-run" type="button">
@@ -50,10 +49,10 @@
       </button>
       <a class="btn btn-ghost" href="#pipeline">See the architecture ↓</a>
     </div>
-    <dl class="hero-stats" aria-label="Headline results">
-      <div><dt>Intent accuracy</dt><dd>92%</dd></div>
-      <div><dt>Voice → action p50</dt><dd>1.72s</dd></div>
-      <div><dt>Filter rules</dt><dd>65K+</dd></div>
+    <dl class="hero-stats" aria-label="Headline properties">
+      <div><dt>Backend</dt><dd>Rust · Axum</dd></div>
+      <div><dt>Actions</dt><dd>Typed only</dd></div>
+      <div><dt>Every step</dt><dd>Verified</dd></div>
     </dl>
   </div>
 
@@ -79,11 +78,11 @@
     <span>structured tool calling</span><i>●</i><span>task-graph execution</span><i>▲</i>
     <span>self-healing selectors</span><i>■</i><span>action verification</span><i>●</i>
     <span>clarification loops</span><i>▲</i><span>human-in-the-loop safety</span><i>■</i>
-    <span>accessibility-tree-first</span><i>●</i><span>multimodal fallback</span><i>▲</i>
+    <span>accessibility-tree-first</span><i>●</i><span>cancellation everywhere</span><i>▲</i>
     <span>structured tool calling</span><i>■</i><span>task-graph execution</span><i>●</i>
     <span>self-healing selectors</span><i>▲</i><span>action verification</span><i>■</i>
     <span>clarification loops</span><i>●</i><span>human-in-the-loop safety</span><i>▲</i>
-    <span>accessibility-tree-first</span><i>■</i><span>multimodal fallback</span><i>●</i>
+    <span>accessibility-tree-first</span><i>■</i><span>cancellation everywhere</span><i>●</i>
   </div>
 </div>
 
@@ -92,7 +91,7 @@
   <div class="section-head">
     <span class="section-no">01</span>
     <h2>Live console</h2>
-    <p class="section-desc">One spoken command → a task graph → structured actions → verified steps → spoken feedback. Press run to replay a real trace.</p>
+    <p class="section-desc">One command → task graph → structured actions → verified steps → spoken feedback, streamed live from the Rust backend over SSE. <span class="conn-badge" id="conn-badge" role="status">connecting…</span></p>
   </div>
 
   <div class="console">
@@ -103,10 +102,16 @@
         <div class="wave" id="wave" data-state="idle" aria-hidden="true">
           <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
         </div>
-        <p class="transcript"><span id="transcript-text">Press “Run demo” to start listening…</span><span class="caret" id="caret"></span></p>
+        <p class="transcript"><span id="transcript-text">Press “Run demo”, or type a command below…</span><span class="caret" id="caret" hidden></span></p>
       </div>
+      <form class="command-form" id="command-form">
+        <label class="sr-only" for="command-input">Type a command</label>
+        <input id="command-input" name="command" type="text" autocomplete="off"
+               placeholder='e.g. "open youtube" or "open the second one"' />
+        <button class="btn btn-ghost btn-sm" type="submit">Send</button>
+      </form>
       <div class="con-label"><span class="sq sq-yellow"></span>TTS OUT</div>
-      <ul class="tts-log" id="tts-log" aria-live="polite"></ul>
+      <ul class="tts-log" id="tts-log" aria-live="polite" aria-label="Spoken feedback"></ul>
       <div class="voice-controls">
         <button class="btn btn-primary btn-sm" id="run-demo" type="button">▶ Run demo</button>
         <button class="btn btn-danger btn-sm" id="barge-in" type="button" disabled>■ Barge-in / stop</button>
@@ -117,7 +122,14 @@
     <div class="console-col con-graph">
       <div class="con-label"><span class="sq sq-blue"></span>TASK GRAPH</div>
       <div class="goal-chip" id="goal-chip">goal: —</div>
-      <ol class="task-graph" id="task-graph"></ol>
+      <ol class="task-graph" id="task-graph" aria-live="polite" aria-label="Task graph"></ol>
+      <div class="confirm-bar" id="confirm-bar" hidden>
+        <p class="confirm-q" id="confirm-question"></p>
+        <div class="confirm-actions">
+          <button class="btn btn-primary btn-sm" id="confirm-yes" type="button">✓ Approve</button>
+          <button class="btn btn-danger btn-sm" id="confirm-no" type="button">✕ Deny</button>
+        </div>
+      </div>
     </div>
 
     <!-- Action column -->
@@ -127,7 +139,7 @@
 // LLM proposes → validator approves
 // → executor runs → verifier confirms</code></pre>
       <div class="con-label"><span class="sq sq-red"></span>VERIFIER</div>
-      <ul class="verify-log" id="verify-log"></ul>
+      <ul class="verify-log" id="verify-log" aria-live="polite" aria-label="Verification log"></ul>
     </div>
   </div>
 </section>
@@ -145,30 +157,30 @@
       <span class="pipe-shape ps-circle"></span>
       <h3>VAD / ASR</h3><p>Noise suppression, barge-in, streaming transcription starts the planner early.</p>
     </div>
-    <div class="pipe-arrow">→</div>
+    <div class="pipe-arrow" aria-hidden="true">→</div>
     <div class="pipe-stage" style="--pc:var(--yellow)">
       <span class="pipe-shape ps-triangle"></span>
       <h3>Gemini NLU</h3><p>Intent, entities, confidence. Ambiguous? Ask — never guess blindly.</p>
     </div>
-    <div class="pipe-arrow">→</div>
+    <div class="pipe-arrow" aria-hidden="true">→</div>
     <div class="pipe-stage" style="--pc:var(--blue)">
       <span class="pipe-shape ps-square"></span>
-      <h3>Planner</h3><p>Goal → task graph with success criteria. Retryable, resumable, explainable.</p>
+      <h3>Planner</h3><p>Goal → validated task graph with success criteria. Retryable, resumable.</p>
     </div>
-    <div class="pipe-arrow">→</div>
+    <div class="pipe-arrow" aria-hidden="true">→</div>
     <div class="pipe-stage" style="--pc:var(--ink)">
       <span class="pipe-shape ps-half"></span>
       <h3>Policy</h3><p>Permission levels gate sensitive actions. Payments always confirm.</p>
     </div>
-    <div class="pipe-arrow">→</div>
+    <div class="pipe-arrow" aria-hidden="true">→</div>
     <div class="pipe-stage" style="--pc:var(--red)">
       <span class="pipe-shape ps-circle"></span>
-      <h3>Browser MCP</h3><p>navigate · click · type · extract — typed tools, validated before dispatch.</p>
+      <h3>BrowserRuntime</h3><p>navigate · click · type · extract — typed actions, mock or Playwright sidecar.</p>
     </div>
-    <div class="pipe-arrow">→</div>
+    <div class="pipe-arrow" aria-hidden="true">→</div>
     <div class="pipe-stage" style="--pc:var(--blue)">
       <span class="pipe-shape ps-square"></span>
-      <h3>Verifier</h3><p>URL, DOM delta, network idle. Fail → retry, heal selector, or ask the user.</p>
+      <h3>Verifier</h3><p>URL, DOM delta, result counts. Fail → classify → recover or ask the user.</p>
     </div>
   </div>
 
@@ -184,36 +196,34 @@
   <div class="section-head">
     <span class="section-no">03</span>
     <h2>Measured, not claimed</h2>
-    <p class="section-desc">Every number below comes from the eval harness — 50 scripted tasks, noisy-audio and broken-selector variants included.</p>
+    <p class="section-desc">Numbers from the eval harness (<code>cargo run -p neuralnav-evals --bin run-evals</code>) and the mock-runtime latency budget.</p>
   </div>
 
   <div class="viz-root">
-    <!-- Stat tiles -->
     <div class="stat-row">
       <div class="stat-tile">
         <span class="stat-label">Intent accuracy</span>
-        <span class="stat-value">92%</span>
-        <span class="stat-delta delta-good">▲ +7.4 pts vs rule-based baseline</span>
+        <span class="stat-value">100%</span>
+        <span class="stat-delta delta-good">▲ 10/10 eval commands (mock planner)</span>
       </div>
       <div class="stat-tile">
-        <span class="stat-label">Ambiguous-command failures</span>
-        <span class="stat-value">−40%</span>
-        <span class="stat-delta delta-good">▼ via clarification loop</span>
+        <span class="stat-label">Graph validity</span>
+        <span class="stat-value">100%</span>
+        <span class="stat-delta delta-good">every plan passes DAG validation</span>
       </div>
       <div class="stat-tile">
-        <span class="stat-label">Voice → action, p50</span>
-        <span class="stat-value">1.72s</span>
-        <span class="stat-delta delta-good">▼ −0.31s vs last eval run</span>
+        <span class="stat-label">Demo wall-clock</span>
+        <span class="stat-value">&lt;8s</span>
+        <span class="stat-delta delta-good">▼ enforced by integration test</span>
       </div>
       <div class="stat-tile">
-        <span class="stat-label">Ad + tracker filter rules</span>
-        <span class="stat-value">65K</span>
-        <span class="stat-delta">request-interception pipeline</span>
+        <span class="stat-label">Adblock seed rules</span>
+        <span class="stat-value">32</span>
+        <span class="stat-delta">EasyList-compatible loader for 65K+</span>
       </div>
     </div>
 
     <div class="viz-grid">
-      <!-- Latency budget chart -->
       <figure class="chart-card" id="latency-card">
         <figcaption class="chart-head">
           <div>
@@ -230,12 +240,11 @@
         </table>
       </figure>
 
-      <!-- Success meters -->
       <div class="chart-card meters-card">
         <div class="chart-head">
           <div>
             <h3>Task success rate</h3>
-            <p class="chart-sub">by category · 50-task eval suite · target 90%</p>
+            <p class="chart-sub">by category · eval suite · target 90%</p>
           </div>
         </div>
         <div class="meters" id="meters"></div>
@@ -243,26 +252,26 @@
       </div>
     </div>
 
-    <!-- Error classes -->
     <div class="chart-card errors-card">
       <div class="chart-head">
         <div>
           <h3>Failure classes → recovery policy</h3>
-          <p class="chart-sub">every failure is classified, then routed to a recovery strategy</p>
+          <p class="chart-sub">every failure is classified (<code>FailureClass</code>), then routed by <code>recovery::strategy_for</code></p>
         </div>
       </div>
       <table class="error-table">
-        <caption class="sr-only">Failure classes with counts and recovery strategies</caption>
-        <thead><tr><th scope="col">Class</th><th scope="col">Count</th><th scope="col">Recovery</th></tr></thead>
+        <caption class="sr-only">Failure classes with recovery strategies</caption>
+        <thead><tr><th scope="col">Class</th><th scope="col">Recovery</th></tr></thead>
         <tbody>
-          <tr><td><code>ELEMENT_NOT_FOUND</code></td><td>11</td><td>Self-healing selector ladder: role+name → text → CSS → vision</td></tr>
-          <tr><td><code>POPUP_BLOCKING_VIEW</code></td><td>7</td><td>Auto-dismiss cookie banners, newsletter modals, chat widgets</td></tr>
-          <tr><td><code>AMBIGUOUS_COMMAND</code></td><td>6</td><td>Clarification loop — ask, don't guess</td></tr>
-          <tr><td><code>ACTION_VERIFICATION_FAILED</code></td><td>5</td><td>Retry → alternate selector → safely abort</td></tr>
-          <tr><td><code>PAGE_TIMEOUT</code></td><td>4</td><td>Timeout + retry, fall back to simplified extraction</td></tr>
-          <tr><td><code>AUTH_REQUIRED</code></td><td>3</td><td>Pause task, notify user, offer manual mode</td></tr>
-          <tr><td><code>CAPTCHA_REQUIRED</code></td><td>2</td><td>Never bypass — pause and wait for the human</td></tr>
-          <tr><td><code>NETWORK_ERROR</code></td><td>2</td><td>Proxy health check → automatic failover</td></tr>
+          <tr><td><code>ELEMENT_NOT_FOUND</code></td><td>Self-healing selector ladder: role+name → text → CSS → vision</td></tr>
+          <tr><td><code>POPUP_BLOCKING_VIEW</code></td><td>Auto-dismiss cookie banners, newsletter modals, chat widgets</td></tr>
+          <tr><td><code>AMBIGUOUS_COMMAND</code></td><td>Clarification loop — ask, don't guess</td></tr>
+          <tr><td><code>ACTION_VERIFICATION_FAILED</code></td><td>Retry → alternate selector → safely abort</td></tr>
+          <tr><td><code>PAGE_TIMEOUT</code></td><td>Timeout + retry, fall back to simplified extraction</td></tr>
+          <tr><td><code>AUTH_REQUIRED</code></td><td>Pause task, notify user, offer manual mode</td></tr>
+          <tr><td><code>CAPTCHA_REQUIRED</code></td><td>Never bypass — pause and wait for the human</td></tr>
+          <tr><td><code>NETWORK_ERROR</code></td><td>Proxy health check → automatic failover</td></tr>
+          <tr><td><code>POLICY_BLOCKED</code></td><td>Refuse and explain — no retry</td></tr>
         </tbody>
       </table>
     </div>
@@ -282,46 +291,46 @@
       <span class="safety-shape ss-circle"></span>
       <span class="safety-level">LEVEL 1</span>
       <h3>Read-only</h3>
-      <ul><li>Open pages, scroll, extract info</li><li>No forms, no purchases</li><li>Default mode for new sites</li></ul>
+      <ul><li>Navigate, scroll, extract, go back, reload</li><li>No typing, no clicking, no purchases</li><li>Mutating actions are policy-blocked</li></ul>
     </div>
     <div class="safety-card" style="--sc:var(--yellow)">
       <span class="safety-shape ss-triangle"></span>
       <span class="safety-level">LEVEL 2</span>
       <h3>Interactive</h3>
-      <ul><li>Fill forms, click buttons</li><li>Sign in with user approval</li><li>Verified after every action</li></ul>
+      <ul><li>Fill forms, click buttons, extract</li><li>Payments / messages / deletions need confirmation</li><li>Verified after every action</li></ul>
     </div>
     <div class="safety-card" style="--sc:var(--red)">
       <span class="safety-shape ss-square"></span>
       <span class="safety-level">LEVEL 3</span>
       <h3>Restricted</h3>
-      <ul><li>Payments, downloads, account changes</li><li>Explicit spoken confirmation required</li><li>“No, stop” always wins — barge-in</li></ul>
+      <ul><li>Checkout, payment, account changes, downloads</li><li>Each requires explicit confirmation</li><li>“No, stop” always wins — barge-in</li></ul>
     </div>
   </div>
 
   <blockquote class="hitl">
     <span class="hitl-mark" aria-hidden="true">“</span>
-    <p><b>Agent:</b> I found the checkout page. Do you want me to proceed to payment?<br /><b>User:</b> No, stop. <span class="hitl-note">→ task halts instantly.</span></p>
+    <p><b>User:</b> No, stop.<br /><b>Agent:</b> Stopped. <span class="hitl-note">→ CancellationToken fires; TTS halts mid-word; every pending node is skipped.</span></p>
   </blockquote>
 </section>
 
 <!-- ══════════════════ FOOTER ══════════════════ -->
 <footer class="footer">
   <div class="foot-tools">
-    <span class="foot-label">MCP TOOLS</span>
+    <span class="foot-label">ACTION VOCABULARY</span>
     <div class="tool-chips">
-      <code>browser_navigate</code><code>browser_click</code><code>browser_type</code>
-      <code>browser_extract</code><code>browser_screenshot</code><code>browser_get_accessibility_tree</code>
-      <code>browser_switch_tab</code><code>browser_close_tab</code>
+      <code>navigate</code><code>click</code><code>type</code><code>scroll</code>
+      <code>wait</code><code>extract</code><code>go_back</code><code>reload</code>
+      <code>speak</code><code>ask_user</code><code>confirm_sensitive_action</code>
     </div>
   </div>
   <div class="foot-bottom">
     <span class="brand-mark sm" aria-hidden="true"><span class="bm-circle"></span><span class="bm-triangle"></span><span class="bm-square"></span></span>
     <span>NEURALNAV © 2025 — form follows function.</span>
-    <span class="foot-right">Gemini · Playwright · MCP · Whisper</span>
+    <span class="foot-right">Rust · Axum · Tokio · Vite · Playwright</span>
   </div>
 </footer>
 
 <div class="viz-tooltip" id="viz-tooltip" role="tooltip" hidden></div>
-<script src="app.js"></script>
+<script type="module" src="/src/main.ts"></script>
 </body>
 </html>

@@ -484,3 +484,42 @@ code { font-family: var(--font-mono); }
   .hero-stats > div:last-child { border-bottom: none; }
   .top-badge { display: none; }
 }
+
+/* ══════════════════ LIVE-CONSOLE ADDITIONS (Vite app) ══════════════════ */
+.conn-badge {
+  display: inline-block; margin-left: 10px; padding: 3px 10px;
+  font-size: 12px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
+  border: 2px solid var(--ink-muted); color: var(--ink-muted); vertical-align: 2px;
+}
+.conn-badge[data-state="open"] { border-color: var(--delta-good); color: var(--delta-good); }
+.conn-badge[data-state="reconnecting"] { border-color: var(--red); color: var(--red); }
+
+.command-form { display: flex; gap: 10px; margin-top: 14px; }
+.command-form input {
+  flex: 1; min-width: 0; font-family: var(--font-mono); font-size: 13.5px;
+  padding: 11px 12px; border: var(--rule-thin); background: var(--surface);
+  color: var(--ink);
+}
+.command-form input:focus-visible { outline: 3px solid var(--blue); outline-offset: 1px; }
+.command-form input::placeholder { color: var(--ink-muted); }
+
+.confirm-bar {
+  margin-top: 16px; padding: 16px; border: var(--rule-thin);
+  background: #fdf3d7; box-shadow: 5px 5px 0 var(--yellow);
+}
+.confirm-q { font-size: 15px; font-weight: 600; margin-bottom: 12px; }
+.confirm-actions { display: flex; gap: 10px; }
+
+.btn:focus-visible, .table-toggle:focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; }
+
+.task-node[data-state="waiting_user"] .tn-status {
+  border-color: var(--yellow); color: var(--ink); background: #fdf3d7;
+}
+.task-node[data-state="failed"] { background: #fbe4e1; }
+.task-node[data-state="failed"] .tn-status { border-color: var(--red); color: #fff; background: var(--red); }
+.task-node[data-state="skipped"] .tn-status { border-color: var(--ink-muted); color: var(--ink-muted); text-decoration: line-through; }
+.task-node[data-state="success"] .tn-status { border-color: var(--blue); color: #fff; background: var(--blue); }
+.task-node[data-state="success"] .tn-idx { background: var(--blue); color: #fff; border-color: var(--blue); }
+
+.verify-log .v-policy { color: #7a5200; font-weight: 600; }
+.verify-log .v-recovery { color: var(--blue); font-weight: 600; }
