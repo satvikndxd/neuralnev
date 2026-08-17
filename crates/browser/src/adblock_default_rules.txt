@@ -1,0 +1,34 @@
+# NeuralNav embedded seed rules (domain suffix match). Replace with a full
+# EasyList domain dump for production (65k+ rules) via ADBLOCK_RULES_FILE.
+doubleclick.net
+googlesyndication.com
+googleadservices.com
+google-analytics.com
+googletagmanager.com
+adnxs.com
+adsafeprotected.com
+adsrvr.org
+amazon-adsystem.com
+criteo.com
+criteo.net
+facebook.net
+connect.facebook.net
+hotjar.com
+moatads.com
+outbrain.com
+taboola.com
+pubmatic.com
+rubiconproject.com
+scorecardresearch.com
+quantserve.com
+chartbeat.com
+mixpanel.com
+segment.io
+branch.io
+appsflyer.com
+smartadserver.com
+openx.net
+yieldmo.com
+zedo.com
+media.net
+advertising.com

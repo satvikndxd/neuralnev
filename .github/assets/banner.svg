@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 300" role="img" aria-label="NeuralNav — voice-first autonomous browser agent">
+  <!-- paper -->
+  <rect width="1200" height="300" fill="#f2ede1"/>
+
+  <!-- frame rules -->
+  <rect x="0" y="0" width="1200" height="6" fill="#16130e"/>
+  <rect x="0" y="294" width="1200" height="6" fill="#16130e"/>
+
+  <!-- ══ left geometric composition ══ -->
+  <line x1="330" y1="6" x2="330" y2="294" stroke="#16130e" stroke-width="4"/>
+  <line x1="6" y1="150" x2="330" y2="150" stroke="#16130e" stroke-width="3"/>
+  <line x1="165" y1="6" x2="165" y2="150" stroke="#16130e" stroke-width="3"/>
+
+  <!-- red circle -->
+  <circle cx="85" cy="78" r="52" fill="#d8362a"/>
+  <!-- black quarter disc, corner anchored top-right -->
+  <path d="M330 6 L330 150 A144 144 0 0 1 186 6 Z" fill="#16130e"/>
+  <!-- yellow half-moon -->
+  <path d="M40 294 L40 214 A62 62 0 0 1 164 214 L164 294 Z" fill="#f0b429"/>
+  <!-- blue triangle -->
+  <path d="M200 294 L318 294 L318 176 Z" fill="#1f4fd8"/>
+  <!-- stripes chip -->
+  <g>
+    <clipPath id="chip"><rect x="200" y="176" width="60" height="60"/></clipPath>
+    <g clip-path="url(#chip)">
+      <rect x="200" y="176" width="60" height="60" fill="#f2ede1"/>
+      <g stroke="#16130e" stroke-width="6">
+        <line x1="188" y1="248" x2="260" y2="176"/>
+        <line x1="206" y1="266" x2="278" y2="194"/>
+        <line x1="170" y1="230" x2="242" y2="158"/>
+      </g>
+    </g>
+  </g>
+
+  <!-- ══ waveform mark ══ -->
+  <g transform="translate(370,128)">
+    <rect x="0"  y="-14" width="9" height="28" rx="4" fill="#16130e"/>
+    <rect x="16" y="-30" width="9" height="60" rx="4" fill="#d8362a"/>
+    <rect x="32" y="-44" width="9" height="88" rx="4" fill="#16130e"/>
+    <rect x="48" y="-30" width="9" height="60" rx="4" fill="#1f4fd8"/>
+    <rect x="64" y="-14" width="9" height="28" rx="4" fill="#f0b429"/>
+  </g>
+
+  <!-- ══ wordmark ══ -->
+  <text x="470" y="148" font-family="Futura, 'Jost', 'Avenir Next', 'Century Gothic', Helvetica, Arial, sans-serif"
+        font-size="84" font-weight="800" letter-spacing="2" fill="#16130e">NEURALNAV</text>
+
+  <!-- tagline -->
+  <text x="474" y="196" font-family="Futura, 'Jost', 'Avenir Next', 'Century Gothic', Helvetica, Arial, sans-serif"
+        font-size="30" font-weight="700" letter-spacing="6" fill="#16130e">SPEAK<tspan fill="#d8362a">.</tspan> PLAN<tspan fill="#f0b429">.</tspan> VERIFY<tspan fill="#1f4fd8">.</tspan></text>
+
+  <!-- sub line -->
+  <text x="474" y="232" font-family="Futura, 'Jost', 'Avenir Next', 'Century Gothic', Helvetica, Arial, sans-serif"
+        font-size="15" font-weight="500" letter-spacing="2.5" fill="#55503f">VOICE-FIRST AUTONOMOUS BROWSER AGENT · RUST · AXUM · VITE</text>
+
+  <!-- right-edge accents -->
+  <rect x="1140" y="42" width="26" height="26" fill="#1f4fd8"/>
+  <circle cx="1153" cy="110" r="14" fill="#d8362a"/>
+  <path d="M1140 176 L1166 176 L1153 150 Z" fill="#f0b429"/>
+  <rect x="1140" y="206" width="26" height="60" fill="#16130e"/>
+</svg>

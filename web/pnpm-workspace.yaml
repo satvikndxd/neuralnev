@@ -1,0 +1,7 @@
+packages:
+  - "."
+
+# esbuild's postinstall writes its platform binary; approve it so
+# `pnpm install` works non-interactively.
+allowBuilds:
+  esbuild: true

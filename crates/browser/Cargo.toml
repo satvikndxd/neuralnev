@@ -1,0 +1,21 @@
+[package]
+name = "neuralnav-browser"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[features]
+# Reserved for a pure-Rust CDP runtime (chromiumoxide / headless_chrome).
+# Deliberately not implemented yet — see ASSUMPTIONS.md. Enabling the flag
+# only compiles the documented stub module; Mock and Playwright sidecar are
+# the supported runtimes.
+cdp = []
+
+[dependencies]
+neuralnav-core = { workspace = true }
+async-trait = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+tokio = { workspace = true }
+tokio-util = { workspace = true }
+tracing = { workspace = true }

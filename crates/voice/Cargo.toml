@@ -1,0 +1,12 @@
+[package]
+name = "neuralnav-voice"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+neuralnav-core = { workspace = true }
+async-trait = { workspace = true }
+tokio = { workspace = true }
+tokio-util = { workspace = true }
+tracing = { workspace = true }
