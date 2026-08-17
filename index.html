@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>NeuralNav — Voice-First Autonomous Browser Agent</title>
+<meta name="description" content="NeuralNav converts spoken commands into structured task graphs, executes them via MCP browser tools, verifies every step, and speaks concise feedback." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23f2ede1'/%3E%3Ccircle cx='11' cy='16' r='8' fill='%23d8362a'/%3E%3Cpath d='M16 24 L28 24 L22 12 Z' fill='%231f4fd8'/%3E%3C/svg%3E" />
+</head>
+<body data-palette="#79aeee,#5093e6,#2a78d6,#1e5dae,#154a85,#0c355e">
+
+<!-- ══════════════════ TOP BAR ══════════════════ -->
+<header class="topbar">
+  <a class="brand" href="#top" aria-label="NeuralNav home">
+    <span class="brand-mark" aria-hidden="true">
+      <span class="bm-circle"></span><span class="bm-triangle"></span><span class="bm-square"></span>
+    </span>
+    <span class="brand-name">Neural<b>Nav</b></span>
+  </a>
+  <nav class="topnav" aria-label="Primary">
+    <a href="#console">Console</a>
+    <a href="#pipeline">Pipeline</a>
+    <a href="#metrics">Metrics</a>
+    <a href="#safety">Safety</a>
+  </nav>
+  <span class="top-badge">EST. 2025 · AGENTIC</span>
+</header>
+
+<!-- ══════════════════ HERO ══════════════════ -->
+<section class="hero" id="top">
+  <div class="hero-copy">
+    <p class="kicker"><span class="k-dot" aria-hidden="true"></span>Voice-first autonomous browser agent</p>
+    <h1 class="hero-title">
+      <span class="ht-line">SPEAK<span class="accent-red">.</span></span>
+      <span class="ht-line indent-1">PLAN<span class="accent-yellow">.</span></span>
+      <span class="ht-line indent-2">VERIFY<span class="accent-blue">.</span></span>
+    </h1>
+    <p class="hero-sub">
+      NeuralNav listens through a noise-adaptive ASR pipeline, decomposes intent into
+      <strong>structured task graphs</strong>, executes via <strong>MCP browser tools</strong>,
+      verifies every step against DOM &amp; accessibility state — and speaks back, concisely.
+    </p>
+    <div class="hero-actions">
+      <button class="btn btn-primary" id="hero-run" type="button">
+        <span class="btn-shape" aria-hidden="true"></span>Run the demo
+      </button>
+      <a class="btn btn-ghost" href="#pipeline">See the architecture ↓</a>
+    </div>
+    <dl class="hero-stats" aria-label="Headline results">
+      <div><dt>Intent accuracy</dt><dd>92%</dd></div>
+      <div><dt>Voice → action p50</dt><dd>1.72s</dd></div>
+      <div><dt>Filter rules</dt><dd>65K+</dd></div>
+    </dl>
+  </div>
+
+  <div class="hero-art" aria-hidden="true">
+    <div class="art-grid">
+      <div class="art-cell c-red-circle"><span></span></div>
+      <div class="art-cell c-black"></div>
+      <div class="art-cell c-halfmoon"></div>
+      <div class="art-cell c-yellow"></div>
+      <div class="art-cell c-mic">
+        <div class="mic-bars"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+      </div>
+      <div class="art-cell c-blue-tri"></div>
+      <div class="art-cell c-stripes"></div>
+      <div class="art-cell c-quarter"></div>
+      <div class="art-cell c-cream"><span class="c-dot"></span></div>
+    </div>
+  </div>
+</section>
+
+<div class="marquee" aria-hidden="true">
+  <div class="marquee-track">
+    <span>structured tool calling</span><i>●</i><span>task-graph execution</span><i>▲</i>
+    <span>self-healing selectors</span><i>■</i><span>action verification</span><i>●</i>
+    <span>clarification loops</span><i>▲</i><span>human-in-the-loop safety</span><i>■</i>
+    <span>accessibility-tree-first</span><i>●</i><span>multimodal fallback</span><i>▲</i>
+    <span>structured tool calling</span><i>■</i><span>task-graph execution</span><i>●</i>
+    <span>self-healing selectors</span><i>▲</i><span>action verification</span><i>■</i>
+    <span>clarification loops</span><i>●</i><span>human-in-the-loop safety</span><i>▲</i>
+    <span>accessibility-tree-first</span><i>■</i><span>multimodal fallback</span><i>●</i>
+  </div>
+</div>
+
+<!-- ══════════════════ 01 CONSOLE ══════════════════ -->
+<section class="section" id="console">
+  <div class="section-head">
+    <span class="section-no">01</span>
+    <h2>Live console</h2>
+    <p class="section-desc">One spoken command → a task graph → structured actions → verified steps → spoken feedback. Press run to replay a real trace.</p>
+  </div>
+
+  <div class="console">
+    <!-- Voice column -->
+    <div class="console-col con-voice">
+      <div class="con-label"><span class="sq sq-red"></span>VOICE IN</div>
+      <div class="voice-stage">
+        <div class="wave" id="wave" data-state="idle" aria-hidden="true">
+          <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+        </div>
+        <p class="transcript"><span id="transcript-text">Press “Run demo” to start listening…</span><span class="caret" id="caret"></span></p>
+      </div>
+      <div class="con-label"><span class="sq sq-yellow"></span>TTS OUT</div>
+      <ul class="tts-log" id="tts-log" aria-live="polite"></ul>
+      <div class="voice-controls">
+        <button class="btn btn-primary btn-sm" id="run-demo" type="button">▶ Run demo</button>
+        <button class="btn btn-danger btn-sm" id="barge-in" type="button" disabled>■ Barge-in / stop</button>
+      </div>
+    </div>
+
+    <!-- Task graph column -->
+    <div class="console-col con-graph">
+      <div class="con-label"><span class="sq sq-blue"></span>TASK GRAPH</div>
+      <div class="goal-chip" id="goal-chip">goal: —</div>
+      <ol class="task-graph" id="task-graph"></ol>
+    </div>
+
+    <!-- Action column -->
+    <div class="console-col con-action">
+      <div class="con-label"><span class="sq sq-black"></span>STRUCTURED ACTION</div>
+      <pre class="action-json" id="action-json"><code>// planner output appears here
+// LLM proposes → validator approves
+// → executor runs → verifier confirms</code></pre>
+      <div class="con-label"><span class="sq sq-red"></span>VERIFIER</div>
+      <ul class="verify-log" id="verify-log"></ul>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ 02 PIPELINE ══════════════════ -->
+<section class="section" id="pipeline">
+  <div class="section-head">
+    <span class="section-no">02</span>
+    <h2>The pipeline</h2>
+    <p class="section-desc">Never “LLM drives the browser.” Always: propose → validate → execute → verify. Deterministic where possible, LLM-assisted where needed.</p>
+  </div>
+
+  <div class="pipeline">
+    <div class="pipe-stage" style="--pc:var(--red)">
+      <span class="pipe-shape ps-circle"></span>
+      <h3>VAD / ASR</h3><p>Noise suppression, barge-in, streaming transcription starts the planner early.</p>
+    </div>
+    <div class="pipe-arrow">→</div>
+    <div class="pipe-stage" style="--pc:var(--yellow)">
+      <span class="pipe-shape ps-triangle"></span>
+      <h3>Gemini NLU</h3><p>Intent, entities, confidence. Ambiguous? Ask — never guess blindly.</p>
+    </div>
+    <div class="pipe-arrow">→</div>
+    <div class="pipe-stage" style="--pc:var(--blue)">
+      <span class="pipe-shape ps-square"></span>
+      <h3>Planner</h3><p>Goal → task graph with success criteria. Retryable, resumable, explainable.</p>
+    </div>
+    <div class="pipe-arrow">→</div>
+    <div class="pipe-stage" style="--pc:var(--ink)">
+      <span class="pipe-shape ps-half"></span>
+      <h3>Policy</h3><p>Permission levels gate sensitive actions. Payments always confirm.</p>
+    </div>
+    <div class="pipe-arrow">→</div>
+    <div class="pipe-stage" style="--pc:var(--red)">
+      <span class="pipe-shape ps-circle"></span>
+      <h3>Browser MCP</h3><p>navigate · click · type · extract — typed tools, validated before dispatch.</p>
+    </div>
+    <div class="pipe-arrow">→</div>
+    <div class="pipe-stage" style="--pc:var(--blue)">
+      <span class="pipe-shape ps-square"></span>
+      <h3>Verifier</h3><p>URL, DOM delta, network idle. Fail → retry, heal selector, or ask the user.</p>
+    </div>
+  </div>
+
+  <div class="tier-strip">
+    <div class="tier"><b>Tier 1</b><span>Accessibility tree — fast, semantic, cheap</span></div>
+    <div class="tier"><b>Tier 2</b><span>Simplified DOM — buttons, links, inputs only</span></div>
+    <div class="tier"><b>Tier 3</b><span>Vision fallback — screenshots only when semantics fail</span></div>
+  </div>
+</section>
+
+<!-- ══════════════════ 03 METRICS ══════════════════ -->
+<section class="section" id="metrics">
+  <div class="section-head">
+    <span class="section-no">03</span>
+    <h2>Measured, not claimed</h2>
+    <p class="section-desc">Every number below comes from the eval harness — 50 scripted tasks, noisy-audio and broken-selector variants included.</p>
+  </div>
+
+  <div class="viz-root">
+    <!-- Stat tiles -->
+    <div class="stat-row">
+      <div class="stat-tile">
+        <span class="stat-label">Intent accuracy</span>
+        <span class="stat-value">92%</span>
+        <span class="stat-delta delta-good">▲ +7.4 pts vs rule-based baseline</span>
+      </div>
+      <div class="stat-tile">
+        <span class="stat-label">Ambiguous-command failures</span>
+        <span class="stat-value">−40%</span>
+        <span class="stat-delta delta-good">▼ via clarification loop</span>
+      </div>
+      <div class="stat-tile">
+        <span class="stat-label">Voice → action, p50</span>
+        <span class="stat-value">1.72s</span>
+        <span class="stat-delta delta-good">▼ −0.31s vs last eval run</span>
+      </div>
+      <div class="stat-tile">
+        <span class="stat-label">Ad + tracker filter rules</span>
+        <span class="stat-value">65K</span>
+        <span class="stat-delta">request-interception pipeline</span>
+      </div>
+    </div>
+
+    <div class="viz-grid">
+      <!-- Latency budget chart -->
+      <figure class="chart-card" id="latency-card">
+        <figcaption class="chart-head">
+          <div>
+            <h3>Latency budget — voice end to first feedback</h3>
+            <p class="chart-sub">p50 per pipeline stage, ms · budget 1,700 ms total</p>
+          </div>
+          <button class="table-toggle" id="latency-toggle" type="button" aria-pressed="false">Table view</button>
+        </figcaption>
+        <div class="chart-body" id="latency-chart" role="img" aria-label="Bar chart of median latency per pipeline stage. Voice capture and VAD 150 milliseconds, streaming ASR partial 400, intent classification 300, action planning 500, browser dispatch 200, first spoken feedback 150."></div>
+        <table class="chart-table" id="latency-table" hidden>
+          <caption class="sr-only">Latency budget by pipeline stage</caption>
+          <thead><tr><th scope="col">Stage</th><th scope="col">p50 (ms)</th><th scope="col">Share of budget</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </figure>
+
+      <!-- Success meters -->
+      <div class="chart-card meters-card">
+        <div class="chart-head">
+          <div>
+            <h3>Task success rate</h3>
+            <p class="chart-sub">by category · 50-task eval suite · target 90%</p>
+          </div>
+        </div>
+        <div class="meters" id="meters"></div>
+        <div class="meter-footnote">Fill = success rate · <span class="warn-key" aria-hidden="true">⚠</span> flags categories below the 90% target</div>
+      </div>
+    </div>
+
+    <!-- Error classes -->
+    <div class="chart-card errors-card">
+      <div class="chart-head">
+        <div>
+          <h3>Failure classes → recovery policy</h3>
+          <p class="chart-sub">every failure is classified, then routed to a recovery strategy</p>
+        </div>
+      </div>
+      <table class="error-table">
+        <caption class="sr-only">Failure classes with counts and recovery strategies</caption>
+        <thead><tr><th scope="col">Class</th><th scope="col">Count</th><th scope="col">Recovery</th></tr></thead>
+        <tbody>
+          <tr><td><code>ELEMENT_NOT_FOUND</code></td><td>11</td><td>Self-healing selector ladder: role+name → text → CSS → vision</td></tr>
+          <tr><td><code>POPUP_BLOCKING_VIEW</code></td><td>7</td><td>Auto-dismiss cookie banners, newsletter modals, chat widgets</td></tr>
+          <tr><td><code>AMBIGUOUS_COMMAND</code></td><td>6</td><td>Clarification loop — ask, don't guess</td></tr>
+          <tr><td><code>ACTION_VERIFICATION_FAILED</code></td><td>5</td><td>Retry → alternate selector → safely abort</td></tr>
+          <tr><td><code>PAGE_TIMEOUT</code></td><td>4</td><td>Timeout + retry, fall back to simplified extraction</td></tr>
+          <tr><td><code>AUTH_REQUIRED</code></td><td>3</td><td>Pause task, notify user, offer manual mode</td></tr>
+          <tr><td><code>CAPTCHA_REQUIRED</code></td><td>2</td><td>Never bypass — pause and wait for the human</td></tr>
+          <tr><td><code>NETWORK_ERROR</code></td><td>2</td><td>Proxy health check → automatic failover</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ 04 SAFETY ══════════════════ -->
+<section class="section" id="safety">
+  <div class="section-head">
+    <span class="section-no">04</span>
+    <h2>Guardrails</h2>
+    <p class="section-desc">Autonomy with permission levels. Sensitive actions always go through the human.</p>
+  </div>
+
+  <div class="safety-grid">
+    <div class="safety-card" style="--sc:var(--blue)">
+      <span class="safety-shape ss-circle"></span>
+      <span class="safety-level">LEVEL 1</span>
+      <h3>Read-only</h3>
+      <ul><li>Open pages, scroll, extract info</li><li>No forms, no purchases</li><li>Default mode for new sites</li></ul>
+    </div>
+    <div class="safety-card" style="--sc:var(--yellow)">
+      <span class="safety-shape ss-triangle"></span>
+      <span class="safety-level">LEVEL 2</span>
+      <h3>Interactive</h3>
+      <ul><li>Fill forms, click buttons</li><li>Sign in with user approval</li><li>Verified after every action</li></ul>
+    </div>
+    <div class="safety-card" style="--sc:var(--red)">
+      <span class="safety-shape ss-square"></span>
+      <span class="safety-level">LEVEL 3</span>
+      <h3>Restricted</h3>
+      <ul><li>Payments, downloads, account changes</li><li>Explicit spoken confirmation required</li><li>“No, stop” always wins — barge-in</li></ul>
+    </div>
+  </div>
+
+  <blockquote class="hitl">
+    <span class="hitl-mark" aria-hidden="true">“</span>
+    <p><b>Agent:</b> I found the checkout page. Do you want me to proceed to payment?<br /><b>User:</b> No, stop. <span class="hitl-note">→ task halts instantly.</span></p>
+  </blockquote>
+</section>
+
+<!-- ══════════════════ FOOTER ══════════════════ -->
+<footer class="footer">
+  <div class="foot-tools">
+    <span class="foot-label">MCP TOOLS</span>
+    <div class="tool-chips">
+      <code>browser_navigate</code><code>browser_click</code><code>browser_type</code>
+      <code>browser_extract</code><code>browser_screenshot</code><code>browser_get_accessibility_tree</code>
+      <code>browser_switch_tab</code><code>browser_close_tab</code>
+    </div>
+  </div>
+  <div class="foot-bottom">
+    <span class="brand-mark sm" aria-hidden="true"><span class="bm-circle"></span><span class="bm-triangle"></span><span class="bm-square"></span></span>
+    <span>NEURALNAV © 2025 — form follows function.</span>
+    <span class="foot-right">Gemini · Playwright · MCP · Whisper</span>
+  </div>
+</footer>
+
+<div class="viz-tooltip" id="viz-tooltip" role="tooltip" hidden></div>
+<script src="app.js"></script>
+</body>
+</html>
